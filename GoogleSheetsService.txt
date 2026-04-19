@@ -1,0 +1,53 @@
+---## Note  ##--  Replace the name of your own named credential after copy pasting the code ---## Note  ##-- 
+---## Note  ##--  Replace spreadsheet Id with your spreadsheet id ---## Note  ##-- 
+---## Note  ##--  Replace the Sheet name with your sheet name ---## Note  ##-- 
+
+
+public with sharing class GoogleSheetsService {
+
+    private static final String SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID';
+    private static final String SHEET_NAME = 'Sheet1';
+
+    public static void appendOpportunity(Opportunity opp) {
+
+        HttpRequest req = new HttpRequest();
+
+        String endpoint = 'callout:Google_Service/v4/spreadsheets/' +
+            SPREADSHEET_ID +
+            '/values/' + SHEET_NAME +
+            '!A:G:append?valueInputOption=RAW'; 
+
+        req.setEndpoint(endpoint);
+        req.setMethod('POST');
+        req.setHeader('Content-Type', 'application/json');
+
+        // Safe row creation (null handling)
+        List<Object> row = new List<Object>{
+            opp.Name,
+            opp.Account != null ? opp.Account.Name : '',
+            opp.Amount, 
+            opp.CloseDate != null ? String.valueOf(opp.CloseDate) : '',
+            opp.Owner != null ? opp.Owner.Name : '',
+            opp.CreatedBy != null ? opp.CreatedBy.Name : '',
+            opp.LastModifiedBy != null ? opp.LastModifiedBy.Name : ''
+        };
+
+        Map<String, Object> body = new Map<String, Object>{
+            'values' => new List<Object>{ row }
+        };
+
+        req.setBody(JSON.serialize(body));
+
+        Http http = new Http();
+
+        try {
+            HttpResponse res = http.send(req);
+
+            System.debug('Status Code: ' + res.getStatusCode());
+            System.debug('Response: ' + res.getBody());
+
+        } catch (Exception e) {
+            System.debug('Error while sending to Google Sheets: ' + e.getMessage());
+        }
+    }
+}

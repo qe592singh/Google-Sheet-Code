@@ -1,0 +1,23 @@
+public class SheetsQueueable implements Queueable, Database.AllowsCallouts {
+
+    private Id oppId;
+
+    public SheetsQueueable(Id oppId) {
+        this.oppId = oppId;
+    }
+
+    public void execute(QueueableContext context) {
+
+        Opportunity opp = [
+            SELECT Id, Name, Amount, CloseDate,
+                   Account.Name,
+                   Owner.Name,
+                   CreatedBy.Name,
+                   LastModifiedBy.Name
+            FROM Opportunity
+            WHERE Id = :oppId
+        ];
+
+        GoogleSheetsService.appendOpportunity(opp);
+    }
+}

@@ -1,3 +1,5 @@
+### This is a Trigger ###
+
 trigger OpportunityTrigger on Opportunity (after update) {
 
     for (Opportunity opp : Trigger.new) {

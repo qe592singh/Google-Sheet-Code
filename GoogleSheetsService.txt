@@ -3,6 +3,9 @@
 ---## Note  ##--  Replace the Sheet name with your sheet name ---## Note  ##-- 
 
 
+### This is a Apex Class ###
+
+
 public with sharing class GoogleSheetsService {
 
     private static final String SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID';

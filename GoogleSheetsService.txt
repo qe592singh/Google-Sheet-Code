@@ -3,7 +3,7 @@
 ---## Note  ##--  Replace the Sheet name with your sheet name ---## Note  ##-- 
 
 
-### This is a Apex Class ###
+### This is an Apex Class ###
 
 
 public with sharing class GoogleSheetsService {
